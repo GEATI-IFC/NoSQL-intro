@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<title>Deletar Usuario</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="assets/styles/main.css" media="screen">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div class="menu">teste</div>
+				<div class="migalhadepao">login/Deletar Usuario</div>
+			</div>
+		</header>
+		<div class="main-container container">
+			<form class="form-login" id="main-form">
+				<div>
+					<label>	Informe o login e senha do usuario que deseja deletar:</label>			
+					<input type="text" name="login">
+				</div>	
+				<div>
+					<label>Senha:</label>
+					<input type="password" name="senha">
+				</div>		
+				<div class="buttons">
+					<button id="enviar">Enviar</button>
+					<button id="voltar">Voltar</button>
+				</div>
+			</form>
+
+		<script type="text/javascript" src="assets/scripts/main.js"></script>
+		<script type="text/javascript">
+		var form = document.querySelector("form");
+		var btVoltar = document.getElementById("voltar");
+
+		btVoltar.onclick = function(event){
+			event.preventDefault();
+			window.location='./index.html';
+		}
+		form.onsubmit = function(event){
+			event.preventDefault();
+			post("/deletar-usuario.php", this, function(result){
+				if(result.erro == true) {
+					alert(result.mensagem);
+				}else{
+					window.location='./index.html';
+					alert("usuario deletado");
+				}
+			});
+		};	
+		</script>
+	</body>
+</html>

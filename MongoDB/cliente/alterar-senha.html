@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>Login Loja</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="assets/styles/main.css" media="screen">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div class="menu">teste</div>
+				<div class="migalhadepao">login / Alterar Senha</div>
+			</div>
+		</header>
+		<div class="main-container container">
+			<form id="main-form" class="form-login">
+				<div>
+					<label>Login:</label>
+					<input type="text" name="login">
+				</div>
+				<div>
+					<label>Senha Atual:</label>
+					<input type="password" name="senha">
+				</div>
+				<div>
+					<label>Nova Senha:</label>
+					<input type="password" name="novaSenha">
+				</div>
+				<div>
+					<label>Confirmar Nova Senha:</label>
+					<input type="password" name="confNovaSenha">	
+				</div>
+				<div class="buttons">
+					<button>Alterar</button>
+					<button id="bt-voltar">Voltar</button>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="assets/scripts/main.js"></script>
+		<script type="text/javascript">
+			var form = document.getElementById("main-form");
+			var btVoltar = document.getElementById("bt-voltar");
+
+			btVoltar.onclick = function(event){
+				event.preventDefault();
+				window.location='./index.html';
+			}
+
+			form.onsubmit = function(event){
+				event.preventDefault();
+				if(this.novaSenha.value == '' || this.novaSenha.value != this.confNovaSenha.value){
+					alert("senha e confirmacao invalidas");
+					return false;
+				}
+
+				post("/alterar-senha.php", this, function(result){
+					if(result.erro == true) {
+						alert(result.mensagem);
+						window.location='./index.html';
+					}else{
+						alert('senha alterada com sucesso');
+						window.location='./index.html';
+					}
+				});
+
+			};	
+		</script>
+	</body>
+</html>

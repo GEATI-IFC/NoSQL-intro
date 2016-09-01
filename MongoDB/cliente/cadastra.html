@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>	
+	<head>
+		<title>Cadastrar usuario</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="assets/styles/main.css" media="screen">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div class="menu">teste</div>
+				<div class="migalhadepao">login / Cadastrar Usuario</div>
+			</div>
+		</header>
+
+		<div class="main-container container">
+			<form class="form-login">
+				<div>
+					<label>nome:</label>
+					<input type="text" name="nome">
+				</div>
+				<div>
+					<label>login:</label>
+					<input type="text" name="login">
+				</div>
+				<div>
+					<label>senha:</label>
+					<input type="password" name="senha">
+				</div>
+				<div>
+					<label>confirmação senha:</label>
+					<input type="password" name="conf_senha">
+				</div>
+				<div>
+					<label>CPF:</label>
+					<input type="text" name="cpf">
+				</div>
+				<div>
+					<label>RG</label>
+					<input type="text" name="rg">
+				</div>
+				<div>
+					<label>Data de Nascimento</label>
+					<input type="text" name="data_nascimento">
+				</div>
+				<div class="buttons">
+					<button>cadastrar cliente</button>
+					<button id="voltar">voltar a pagina de login</button>
+				</div>
+			</form>
+		</div>
+
+		<script type="text/javascript" src="assets/scripts/main.js"></script>
+		<script type="text/javascript">
+			var form = document.querySelector("form");
+			var btVoltar = document.getElementById("voltar");
+
+			btVoltar.onclick = function(event){
+				event.preventDefault();
+				window.location='./index.html';
+			}
+
+
+			form.onsubmit = function(event){
+				event.preventDefault();
+
+				if(this.senha.value != this.conf_senha.value || this.senha.value == ""){
+					return false;
+				}
+
+				post("/cadastra.php", this, function(responseJson){
+					if(responseJson.erro == false){
+						alert(responseJson.mensagem);
+						window.location="index.html";
+					}else{
+						alert("Ocorreu um erro, segue mensagem: " + responseJson.mensagem);
+					}
+				});
+			};
+		</script>
+	</body>
+</html>

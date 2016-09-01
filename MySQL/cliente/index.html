@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<title>Login Loja</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="assets/styles/main.css" media="screen">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div class="logo">
+					<img src="./assets/imagens/logo.png">
+				</div>
+				<div class="contato">
+					<img src="./assets/imagens/contato.png">
+				</div>
+				<div class="menu">teste</div>
+				<div class="migalhadepao">login</div>
+			</div>
+		</header>
+
+		<div class="main-container container">
+			<form class="form-login" id="main-form">
+				<div>
+					<label>Login:</label>
+					<input type="text" name="login">
+				</div>
+				
+				<div>
+					<label>Senha:</label>
+					<input type="password" name="senha">		
+				</div>
+				<div class="buttons">
+					
+					<button id="bt-cadastrar">Cadastrar</button>
+					
+					<button>Enviar</button>
+					
+					<button id="bt-deletar">Deletar</button>
+					
+					<button id="bt-alterar">Alterar Senha</button>
+				</div>
+			</form>
+		</div>
+
+		<script type="text/javascript" src="assets/scripts/main.js"></script>
+		<script type="text/javascript">
+			var form = document.getElementById("main-form");
+			var btCadastrar = document.getElementById("bt-cadastrar");
+			var btDeletar = document.getElementById("bt-deletar");
+			var btAlterar = document.getElementById("bt-alterar");
+
+			btCadastrar.onclick = function(event){
+				event.preventDefault();
+				window.location='./cadastra.html';
+			}
+
+			btDeletar.onclick = function(event){
+				event.preventDefault();
+				window.location='./deletar-usuario.html';
+			}
+			btAlterar.onclick = function(event){
+				event.preventDefault();
+				window.location='./alterar-senha.html';
+			}
+
+			form.onsubmit = function(event){
+				event.preventDefault();
+				post("/login.php", this, function(result){
+					if(result.erro == true) {
+						alert(result.mensagem);
+					}else{
+						window.location='./loja-comprar.html';
+					}
+				});
+
+			};	
+		</script>
+	</body>
+</html>

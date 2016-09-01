@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nota Fiscal</title>
+	<style type="text/css">
+		img{
+			width: 100px
+		}
+	</style>
+</head>
+<body>
+	<table id="tabela-cabecalho" border="1">
+		<thead name='cabecalho'>
+			<tr>
+				<td>ID Nota Fiscal</td>
+				<td>Data</td>
+				<td>Nome Cliente</td>
+				<td>CPF</td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<table id="tabela-produtos" border="1">
+		<thead>
+			<tr>
+				<td>Seq</td>
+				<td>Nome</td>
+				<td>Produto</td>
+				<td>Qtd</td>
+				<td>Preco</td> 
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+		<form action='loja-comprar.html' method='POST'>
+			<button type='submit'>Voltar a loja</button>
+		</form>
+
+	<script type="text/javascript" src="assets/scripts/main.js"></script>
+	<script type="text/javascript">
+		
+		var conteudoTabelaCabecalho= document.querySelector("#tabela-cabecalho tbody");
+		var conteudoTabelaProdutos= document.querySelector("#tabela-produtos tbody");
+		
+		get("/finalizar-compra.php", function(responseJson){
+
+			//-----------------------CABECALHO DA NF------------------------------
+			
+			var tr = document.createElement("tr");
+
+			var tdIdNf = document.createElement("td");
+			var tdData = document.createElement("td");
+			var tdNomeCliente = document.createElement("td");
+			var tdCpf = document.createElement("td");
+						
+			tr.appendChild(tdIdNf);
+			tr.appendChild(tdData);
+			tr.appendChild(tdNomeCliente);
+			tr.appendChild(tdCpf);
+							
+			tdIdNf.innerHTML = responseJson['cabecalho']['nf'].id_nf;
+			tdNomeCliente.innerHTML = responseJson['cabecalho']['cliente'].nome;
+			tdData.innerHTML = responseJson['cabecalho']['nf'].data;
+			tdCpf.innerHTML = responseJson['cabecalho']['cliente'].cpf;
+							
+
+			conteudoTabelaCabecalho.appendChild(tr);
+			
+			//-----------------------ITENS DA NF-------------------------------
+
+			var i=0;
+			var tam=responseJson['produtos'].length;
+			for(i=0;i<tam;i++){
+				var tr = document.createElement("tr");
+
+				var tdSeq = document.createElement("td");
+				var tdNome = document.createElement("td");
+				var tdProduto = document.createElement("td");
+				var tdQtd = document.createElement("td");
+				var tdPreco = document.createElement("td");
+
+				var imgProduto = document.createElement("img")
+				tdProduto.appendChild(imgProduto);
+							
+				tr.appendChild(tdSeq);
+				tr.appendChild(tdNome);
+				tr.appendChild(tdProduto);
+				tr.appendChild(tdQtd);
+				tr.appendChild(tdPreco);
+						
+				imgProduto.src = "assets/imagens/"+responseJson['produtos'][i].img_prod;		
+				tdSeq.innerHTML = responseJson['produtos'][i].seq_iten;
+				tdNome.innerHTML = responseJson['produtos'][i].nome_prod;
+				tdQtd.innerHTML = responseJson['produtos'][i].qtd_iten;
+				tdPreco.innerHTML = parseFloat(responseJson['produtos'][i].valor_prod.replace(",", ".").replace("R$",""))*parseInt(responseJson['produtos'][i].qtd_iten);
+							
+				conteudoTabelaProdutos.appendChild(tr);
+			}
+		});
+	</script>
+</body>
+</html>
+

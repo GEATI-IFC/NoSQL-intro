@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>	
+<head>
+	<title>buscar dados </title>
+</head>
+<body>
+
+	<table class="tabela-principal" border="1">
+		<thead>
+			<tr>
+				<td>nome</td>
+				<td>telefone</td>
+				<td>email</td>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- sera adicionado dinamicamente -->
+		</tbody>
+	</table>
+
+	<script type="text/javascript" src="assets/scripts/main.js"></script>
+	<script type="text/javascript">
+		get("/exemplo/buscar-dados.php?id=1", function(responseJson){
+			var i = 0; 
+			var conteudoTabelaPrincipal = document.querySelector("table.tabela-principal tbody");
+			
+			for(; i < responseJson.length; i++){
+				var tr = document.createElement("tr");
+				var tdNome = document.createElement("td");
+				var tdTelefone = document.createElement("td");
+				var tdEmail = document.createElement("td");
+
+				tr.appendChild(tdNome);
+				tr.appendChild(tdTelefone);
+				tr.appendChild(tdEmail);
+
+				tdNome.innerHTML = responseJson[i].nome;
+				tdTelefone.innerHTML = responseJson[i].telefone;
+				tdEmail.innerHTML = responseJson[i].email;
+
+				conteudoTabelaPrincipal.appendChild(tr);
+			}
+		});
+	</script>
+</body>
+</html>

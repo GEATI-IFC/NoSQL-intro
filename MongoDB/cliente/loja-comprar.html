@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>	
+<head>
+	<title>Loja</title>
+	<style type="text/css">
+		img{
+			width: 100px
+		}
+	</style>
+</head>
+<body>
+
+	<table class="tabela-principal" border="1">
+		<thead>
+			<tr>
+				<td>Nome</td>
+				<td>Produto</td>
+				<td>Preco</td> 
+				<td>Qtd:</td>
+				<td>Adicionar</td>
+			</tr>
+		</thead>
+		<tbody>
+			<form>
+			<!-- sera adicionado dinamicamente -->
+		</tbody>
+	</table>
+			<button id="bt-vizualizar-carrinho">Vizualizar carrinho</button>
+			<button id="bt-finalizar-compra">Finalizar compra</button>
+		</form>
+		
+
+	<script type="text/javascript" src="assets/scripts/main.js"></script>
+	<script type="text/javascript">
+		var form = document.querySelector("form");
+		var btVizualizarCarrinho = document.getElementById("bt-vizualizar-carrinho");
+		var btFinalizarCompra = document.getElementById("bt-finalizar-compra");
+
+		btVizualizarCarrinho.onclick = function(){
+			window.location='loja-exibir-carrinho.html';
+		}
+
+		btFinalizarCompra.onclick = function(){
+			window.location='loja-exibir-nf.html';
+		}
+		
+		form.onsubmit = function(event){
+			event.preventDefault();
+		}
+
+		get("/buscar-dados-produto.php", function(responseJson){
+			var i = 0; 
+			var conteudoTabelaPrincipal = document.querySelector("table.tabela-principal tbody");
+				
+			for(; i < responseJson.length; i++){
+				var tr = document.createElement("tr");
+
+				var tdNome = document.createElement("td");
+				var tdProduto = document.createElement("td");
+				var tdPreco = document.createElement("td");
+				var tdQtd = document.createElement("td");
+				var tdAdiciona = document.createElement("td");
+
+				var inputQtd = document.createElement("input");
+				var buttonAdiciona = document.createElement("button");
+				var imgProd = document.createElement("img");
+
+
+				tdProduto.appendChild(imgProd);
+				tdQtd.appendChild(inputQtd);
+				tdAdiciona.appendChild(buttonAdiciona);
+					
+				tr.appendChild(tdNome);
+				tr.appendChild(tdProduto);
+				tr.appendChild(tdPreco);
+				tr.appendChild(tdQtd);
+				tr.appendChild(tdAdiciona);
+
+				inputQtd.type = 'number';
+				inputQtd.value = 1; 
+				inputQtd.min = 1;			 
+				inputQtd.id = 'qtd['+ responseJson[i].id_prod +']';
+					
+				buttonAdiciona.value = responseJson[i].id_prod;
+				buttonAdiciona.innerHTML = 'Adicionar';
+				buttonAdiciona.className = 'buttonAdiciona'; 
+				buttonAdiciona.dataset.qtd = inputQtd.id; 
+				
+				buttonAdiciona.onclick = function(){
+					var qtd = document.getElementById( this.dataset.qtd ).value;
+					var id = this.value;
+					post('/carrinho.php?acao=add',{"qtd":qtd,"id":id} ,function(responseJson){
+						if(responseJson.erro){
+							alert(responseJson.mensagem);
+						}else{
+							alert("O produto foi adicionado");
+						}
+					});
+				};
+					
+				tdNome.innerHTML = responseJson[i].nome_prod;
+				imgProd.src = "assets/imagens/"+responseJson[i].img_prod;
+				tdPreco.innerHTML = responseJson[i].valor_prod;
+					
+
+				conteudoTabelaPrincipal.appendChild(tr);
+			}
+		});
+	</script>
+</body>
+</html>

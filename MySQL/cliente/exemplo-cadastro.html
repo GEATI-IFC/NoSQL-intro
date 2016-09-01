@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>	
+<head>
+	<title>buscar dados </title>
+</head>
+<body>
+	<form>
+		<div>
+			<label>nome</label>
+			<input type="text" name="nome">
+		</div>
+		<div>
+			<label>email</label>
+			<input type="mail" name="email">
+		</div>
+		<div>
+			<label>telefone</label>
+			<input type="tel" name="telefone">
+		</div>
+		<div>
+			<label>enviar</label>
+			<button>enviar dados</button>
+		</div>
+	</form>
+
+	<script type="text/javascript" src="assets/scripts/main.js"></script>
+	<script type="text/javascript">
+		var form = document.querySelector("form");
+
+		form.onsubmit = function(event){
+			event.preventDefault();
+
+			// this == form
+
+			// var dados = 
+
+			// var sNome = this.nome.value;
+			// var sTelefone = this.telefone.value;
+			// var sEmail = this.email.value;
+
+			// var dados = "nome=" + sNome + "&tel=" + sTelefone + "&email=" + sEmail;
+
+			post("/exemplo/salvar-dados.php", this, function(responseJson){
+				if(responseJson.erro == false){
+					alert(responseJson.mensagem);
+				}else{
+					alert("Ocorreu um erro, segue mensagem: " + responseJson.mensagem);
+				}
+			});
+		};
+	</script>
+</body>
+</html>

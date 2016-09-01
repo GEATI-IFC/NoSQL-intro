@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		img{
+			width: 100px
+		}
+	</style>
+</head>
+<body>
+	<table class="tabela-principal" border="1">
+		<thead>
+			<tr>
+				<td>Seq</td>
+				<td>Nome</td>
+				<td>Produto</td>
+				<td>Preco</td> 
+				<td>Qtd</td>
+				<td>Remover</td>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- sera adicionado dinamicamente -->
+		</tbody>
+	</table>
+
+
+			<button id="bt-finalizar-compra">Finalizar compra</button>
+
+
+	<script type="text/javascript" src="assets/scripts/main.js"></script>
+	<script type="text/javascript">
+		var btFinalizarCompra = document.getElementById("bt-finalizar-compra");
+
+		btFinalizarCompra.onclick = function(){
+			window.location='loja-exibir-nf.html';
+		}
+
+		var conteudoTabelaPrincipal = document.querySelector("table.tabela-principal tbody");
+		get("/buscar-dados-carrinho.php", function(responseJson){
+			var i=0;
+			for(;i<responseJson.length;i++){
+				var tr = document.createElement("tr");
+
+				var tdSeq = document.createElement("td");
+				var tdNome = document.createElement("td");
+				var tdProduto = document.createElement("td");
+				var tdPreco = document.createElement("td");
+				var tdQtd = document.createElement("td");
+				var tdRemover = document.createElement("td");
+
+				var inputQtd = document.createElement("input");
+				var imgProd = document.createElement("img");
+				var buttonRemover = document.createElement("button");
+
+				tdQtd.appendChild(inputQtd);
+				tdProduto.appendChild(imgProd);
+				tdRemover.appendChild(buttonRemover);
+							
+				tr.appendChild(tdSeq);
+				tr.appendChild(tdNome);
+				tr.appendChild(tdProduto);
+				tr.appendChild(tdPreco);
+				tr.appendChild(tdQtd);
+				tr.appendChild(tdRemover);
+								
+				inputQtd.type = 'number';
+				inputQtd.value = responseJson[i].qtd; 
+				inputQtd.min = 1;
+				inputQtd.max = responseJson[i].qtd;			 
+				inputQtd.id = 'qtd['+ responseJson[i].id_prod +']';
+
+				buttonRemover.value = responseJson[i].id_prod;
+				buttonRemover.innerHTML = 'Remover';
+				buttonRemover.name = 'iten';
+				buttonRemover.className = 'buttonAdiciona'; 
+
+				var qtd = responseJson[i].qtd;
+				var id = responseJson[i].qtd;
+				var x = i-1;
+				buttonRemover.onclick = function(){
+					post('/carrinho.php?acao=remove',{"qtd":qtd,"id":id,"seq":x} ,function(responseJson){
+						if(responseJson.erro){
+							alert(responseJson.mensagem);
+						}else{
+							alert("O produto foi adicionado");
+						}
+					});
+				};
+								
+				tdQtd.innerHTML = responseJson[i].qtd;
+				tdSeq.innerHTML = i+1;
+				tdNome.innerHTML = responseJson[i].nome_prod;
+				imgProd.src = "assets/imagens/"+responseJson[i].img_prod
+				tdPreco.innerHTML = responseJson[i].valor_prod;
+							
+
+				conteudoTabelaPrincipal.appendChild(tr);
+			}
+		});
+	</script>
+</body>
+</html>
